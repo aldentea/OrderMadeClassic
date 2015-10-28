@@ -10,6 +10,11 @@
   <Window.Resources>
     <local:ModeIsGameConverter x:Key="modeIsGameConverter" />
   </Window.Resources>
+  <Window.CommandBindings>
+		<CommandBinding Command="{x:Static local:Commands.EnterCategoryCommand}"
+										Executed="EnterCategory_Executed"
+										CanExecute="EnterCategory_CanExecute" />
+	</Window.CommandBindings>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -39,8 +44,10 @@
         <ColumnDefinition Width="2*" />
       </Grid.ColumnDefinitions>
 		  <ListBox x:Name="listBoxCategories" Margin="10,10,10,25" Grid.Column="0"
-							 ItemsSource="{Binding Path=Categories}" />
-      <Button x:Name="buttonEnter" Content="Button" Margin="0,10,0,25"  Grid.Column="1"/>
+							 ItemsSource="{Binding Path=Questions.Categories}" />
+      <Button x:Name="buttonEnter" Content="Button" Margin="0,10,0,25"  Grid.Column="1"
+							Command="{x:Static local:Commands.EnterCategoryCommand}"
+							CommandParameter="{Binding ElementName=listBoxCategories, Path=SelectedItem}"/>
       <ListBox x:Name="listBoxQuestions" Margin="10,10,10,25" Grid.Column="2" />
 
     </Grid>

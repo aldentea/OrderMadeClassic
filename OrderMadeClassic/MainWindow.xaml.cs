@@ -29,6 +29,13 @@ namespace GrandMutus.OrderMadeClassic
 			this.FileHistoryShortcutParent = this.MenuItemFileHistoryParent;
 		}
 
+		#region *MyDocumentプロパティ
+		public GrandMutus.Data.MutusDocument MyDocument
+		{
+			get { return (Data.MutusDocument)App.Current.Document; }
+		}
+		#endregion
+
 
 		#region モード関連
 
@@ -90,10 +97,39 @@ namespace GrandMutus.OrderMadeClassic
 			}
 			this.UpdateLayout();	// これが必要らしい．
 		}
-		#endregion
-
 
 		#endregion
 
+		#endregion
+
+
+		#region EnterCategory
+
+		private void EnterCategory_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (e.Parameter is string)
+			{
+				var category = (string)e.Parameter;
+				foreach (var question in MyDocument.Questions.Where(q => q.Category == category))
+				{
+					listBoxQuestions.Items.Add(question);
+				}
+			}
+
+		}
+
+		private void EnterCategory_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			if (e.Parameter is string)
+			{
+				e.CanExecute =  MyDocument.Questions.Categories.Contains((string)e.Parameter);
+			}
+			else
+			{
+				e.CanExecute = false;
+			}
+		}
+
+		#endregion
 	}
 }
