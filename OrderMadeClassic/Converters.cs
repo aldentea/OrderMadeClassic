@@ -39,4 +39,29 @@ namespace GrandMutus.OrderMadeClassic
 	}
 	#endregion
 
+	#region CategoryQuestionConverterクラス
+	public class CategoryQuestionConverter : IValueConverter
+	{
+
+		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			if (value is GrandMutus.Data.IntroQuestion)
+			{
+				var question = (GrandMutus.Data.IntroQuestion)value;
+				return string.Format("[{0}] {1} / {2}", question.Category, question.Song.Title, question.Song.Artist);
+			}
+			else
+			{
+				throw new ArgumentException("IntroQuestionにのみ対応しています。");
+			}
+		}
+
+		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+		{
+			throw new NotImplementedException();
+		}
+	}
+	#endregion
+
+
 }

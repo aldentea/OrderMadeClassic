@@ -9,6 +9,7 @@
         Title="MainWindow" Height="600" Width="619">
   <Window.Resources>
     <local:ModeIsGameConverter x:Key="modeIsGameConverter" />
+		<local:CategoryQuestionConverter x:Key="categoryQuestionConverter" />
   </Window.Resources>
   <Window.CommandBindings>
 		<CommandBinding Command="{x:Static local:Commands.EnterCategoryCommand}"
@@ -48,9 +49,15 @@
       <Button x:Name="buttonEnter" Content="Button" Margin="0,10,0,25"  Grid.Column="1"
 							Command="{x:Static local:Commands.EnterCategoryCommand}"
 							CommandParameter="{Binding ElementName=listBoxCategories, Path=SelectedItem}"/>
-      <ListBox x:Name="listBoxQuestions" Margin="10,10,10,25" Grid.Column="2" />
+			<ListBox x:Name="listBoxQuestions" Margin="10,10,10,25" Grid.Column="2">
+				<ListBox.ItemTemplate>
+					<DataTemplate>
+						<Label Content="{Binding Converter={StaticResource categoryQuestionConverter}}" />
+					</DataTemplate>
+				</ListBox.ItemTemplate>
+			</ListBox>
 
-    </Grid>
+		</Grid>
 
 
 
