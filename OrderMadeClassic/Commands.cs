@@ -10,5 +10,7 @@ namespace GrandMutus.OrderMadeClassic
 	public static class Commands
 	{
 		public static RoutedCommand EnterCategoryCommand = new RoutedCommand();
+
+		public static RoutedCommand ShuffleCommand = new RoutedCommand();
 	}
 }

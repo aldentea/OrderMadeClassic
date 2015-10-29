@@ -15,7 +15,10 @@
 		<CommandBinding Command="{x:Static local:Commands.EnterCategoryCommand}"
 										Executed="EnterCategory_Executed"
 										CanExecute="EnterCategory_CanExecute" />
-	</Window.CommandBindings>
+    <CommandBinding Command="{x:Static local:Commands.ShuffleCommand}"
+										Executed="Shuffle_Executed"
+										CanExecute="Shuffle_CanExecute" />
+  </Window.CommandBindings>
   <Grid>
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
@@ -39,24 +42,38 @@
     </Menu>
 
     <Grid Grid.Row="1">
+      <Grid.RowDefinitions>
+				<RowDefinition Height="*" />
+        <RowDefinition Height="Auto" />
+      </Grid.RowDefinitions>
       <Grid.ColumnDefinitions>
 				<ColumnDefinition Name="ColumnCategories" Width="*" />
         <ColumnDefinition Width="Auto" />
         <ColumnDefinition Width="2*" />
       </Grid.ColumnDefinitions>
-		  <ListBox x:Name="listBoxCategories" Margin="10,10,10,25" Grid.Column="0"
+		  <ListBox x:Name="listBoxCategories" Margin="10,10,10,25"
+							 Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
 							 ItemsSource="{Binding Path=Questions.Categories}" />
-      <Button x:Name="buttonEnter" Content="Button" Margin="0,10,0,25"  Grid.Column="1"
+      <Button x:Name="buttonEnter" Content="選択" Margin="0,10,0,25"
+							Grid.Column="1"  Grid.Row="0" Grid.RowSpan="2" MinWidth="50"
 							Command="{x:Static local:Commands.EnterCategoryCommand}"
 							CommandParameter="{Binding ElementName=listBoxCategories, Path=SelectedItem}"/>
-			<ListBox x:Name="listBoxQuestions" Margin="10,10,10,25" Grid.Column="2">
+			<ListBox x:Name="listBoxQuestions" Margin="10,10,10,10"
+							 Grid.Column="2" Grid.Row="0">
 				<ListBox.ItemTemplate>
 					<DataTemplate>
 						<Label Content="{Binding Converter={StaticResource categoryQuestionConverter}}" />
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-
+      <Grid Grid.Column="2" Grid.Row="1">
+        <Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+          <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+				<Button Content="Shuffle" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,0,25"
+								Grid.Column="0" MinHeight="60"/>
+			</Grid>
 		</Grid>
 
 
