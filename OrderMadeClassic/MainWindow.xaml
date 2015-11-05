@@ -20,7 +20,7 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="Auto" />
       <RowDefinition Height="*" />
-      <RowDefinition Name="RowQuestionPlayer" Height="0" />
+      <RowDefinition Name="RowQuestionPlayer" Height="200" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
@@ -59,7 +59,10 @@
 
 		</Grid>
 
-
+		<Grid Grid.Row="2">
+			<Button Content="START" Width="120" Height="50"
+							HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" />
+		</Grid>
 
     <StatusBar Grid.Row="3" Height="27">
 
