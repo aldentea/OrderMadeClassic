@@ -131,5 +131,46 @@ namespace GrandMutus.OrderMadeClassic
 		}
 
 		#endregion
+
+		#region Shuffle
+		private void Shuffle_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			ShuffleQuestions();
+		}
+
+		private void Shuffle_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = this.listBoxQuestions.Items.Count > 0;
+		}
+
+		#endregion
+
+		/// <summary>
+		/// 問題リストをシャッフルします．
+		/// </summary>
+		private void ShuffleQuestions()
+		{
+			Random random = new Random();
+//			try
+//			{
+					// あれ，ListBoxの描画の抑止ってできないんだっけ？
+				for (int i = listBoxQuestions.Items.Count; i > 1; i--)
+				{
+					int n = random.Next(i);
+					if (n < i - 1)
+					{
+						var item = listBoxQuestions.Items.GetItemAt(n);
+						listBoxQuestions.Items.RemoveAt(n);
+						listBoxQuestions.Items.Insert(i - 1, item);
+					}
+				}
+//			}
+//			finally
+//			{
+
+//			}
+
+		}
+
 	}
 }
