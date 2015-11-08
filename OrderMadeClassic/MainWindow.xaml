@@ -9,7 +9,8 @@
 				xmlns:util="clr-namespace:Aldentea.Wpf.Utility;assembly=AldenteaWpfUtility"
 				xmlns:hypermutus="clr-namespace:HyperMutus;assembly=MutusBase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="619" FontSize="18">
+        Title="MainWindow" Height="600" Width="619" FontSize="18"
+				Initialized="MainWindow_Initialized" Closed="MainWindow_Closed">
 	<Window.Resources>
 		<local:ModeIsGameConverter x:Key="modeIsGameConverter" />
 		<local:CategoryQuestionConverter x:Key="categoryQuestionConverter" />
@@ -44,12 +45,15 @@
 										Command="{x:Static hypermutus:Commands.SeekSabiCommand}"
 										Executed="SeekSabi_Executed"
 										CanExecute="SongPlayer_CanExecute" />
+		<CommandBinding Command="Close"
+										Executed="Close_Executed"
+										CanExecute="Always_CanExecute" />
 	</Window.CommandBindings>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
-			<RowDefinition Name="RowQuestionPlayer" Height="200" />
+			<RowDefinition Name="RowQuestionPlayer" Height="0" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 

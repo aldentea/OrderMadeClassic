@@ -24,6 +24,14 @@ namespace GrandMutus.OrderMadeClassic
 	public partial class MainWindow : BasicWindow
 	{
 
+		Properties.Settings MySettings
+		{
+			get
+			{
+				return Properties.Settings.Default;
+			}
+		}
+
 		// (0.0.4)MediaOpenedイベントのハンドラを追加。
 		#region *コンストラクタ(MainWindow)
 		public MainWindow()
@@ -35,6 +43,25 @@ namespace GrandMutus.OrderMadeClassic
 			this._songPlayer.MediaOpened += SongPlayer_MediaOpened;
 		}
 		#endregion
+
+		// (0.0.5)
+		private void MainWindow_Initialized(object sender, EventArgs e)
+		{
+			// Initializedより
+			SongPlayer.Volume = MySettings.SongPlayerVolume;
+		}
+
+		// (0.0.5)
+		private void MainWindow_Closed(object sender, EventArgs e)
+		{
+			MySettings.SongPlayerVolume = SongPlayer.Volume;
+		}
+
+		// (0.0.5)
+		private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			this.Close();
+		}
 
 		#region *MyDocumentプロパティ
 		public GrandMutus.Data.MutusDocument MyDocument
@@ -389,7 +416,6 @@ namespace GrandMutus.OrderMadeClassic
 
 
 		#endregion
-
 
 
 	}
