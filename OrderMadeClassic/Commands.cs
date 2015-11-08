@@ -12,5 +12,18 @@ namespace GrandMutus.OrderMadeClassic
 		public static RoutedCommand EnterCategoryCommand = new RoutedCommand();
 
 		public static RoutedCommand ShuffleCommand = new RoutedCommand();
+
+		// (0.0.4)
+		public static RoutedCommand NextQuestionCommand = new RoutedCommand();
+
+		// (0.0.4)どこかにあったはずだが、とりあえずここで実装しておく。
+		public static RoutedCommand StartQuestionCommand = new RoutedCommand();
+
+		// (0.0.4)どこかにあったはずだが、とりあえずここで実装しておく。
+		public static RoutedCommand StopQuestionCommand = new RoutedCommand();
+	
+		// (0.0.4)どこかにあったはずだが、とりあえずここで実装しておく。
+		public static RoutedCommand EndQuestionCommand = new RoutedCommand();
+
 	}
 }

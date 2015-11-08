@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Aldentea.Wpf.Application;
+using GrandMutus.Data;
 
 namespace GrandMutus.OrderMadeClassic
 {
@@ -22,12 +23,18 @@ namespace GrandMutus.OrderMadeClassic
 	/// </summary>
 	public partial class MainWindow : BasicWindow
 	{
+
+		// (0.0.4)MediaOpenedイベントのハンドラを追加。
+		#region *コンストラクタ(MainWindow)
 		public MainWindow()
 		{
 			InitializeComponent();
 			
 			this.FileHistoryShortcutParent = this.MenuItemFileHistoryParent;
+
+			this._songPlayer.MediaOpened += SongPlayer_MediaOpened;
 		}
+		#endregion
 
 		#region *MyDocumentプロパティ
 		public GrandMutus.Data.MutusDocument MyDocument
@@ -76,6 +83,8 @@ namespace GrandMutus.OrderMadeClassic
 		// コールバックがstaticなので使いにくいんだよなぁ．
 		// こうやってinternalメソッドを駆使するのは普通の使い方なのかしら？
 
+		// (0.0.4)CurrentGameModeの設定を追加。
+
 		/// <summary>
 		/// CurrentModeに応じてレイアウトを変更します．
 		/// CurrentModeプロパティの変更時に呼び出されることを想定しています．
@@ -93,6 +102,7 @@ namespace GrandMutus.OrderMadeClassic
 					RowQuestionPlayer.Height = new GridLength(200);
 					ColumnCategories.Width = new GridLength(0);
 					buttonEnter.Visibility = Visibility.Collapsed;
+					CurrentGameMode = GameMode.Talking;
 					break;
 			}
 			this.UpdateLayout();	// これが必要らしい．
@@ -140,10 +150,9 @@ namespace GrandMutus.OrderMadeClassic
 
 		private void Shuffle_CanExecute(object sender, CanExecuteRoutedEventArgs e)
 		{
-			e.CanExecute = this.listBoxQuestions.Items.Count > 0;
+			e.CanExecute = CurrentMode == Mode.Ready && this.listBoxQuestions.Items.Count > 0;
 		}
 
-		#endregion
 
 		/// <summary>
 		/// 問題リストをシャッフルします．
@@ -171,6 +180,217 @@ namespace GrandMutus.OrderMadeClassic
 //			}
 
 		}
+		#endregion
+
+
+		/// <summary>
+		/// 出題した問題のカウントです。
+		/// StandbyQuestionしたときに1つ増えます。
+		/// </summary>
+		int _questionCount = 0;
+
+
+		// (0.0.4)
+		#region NextQuestion
+		private void NextQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (listBoxQuestions.Items.Count > _questionCount)
+			{
+				var question = (IntroQuestion)listBoxQuestions.Items.GetItemAt(_questionCount);
+				StandbyQuestion(question);
+				_questionCount += 1;
+			}
+			else
+			{
+				// 終了勧告。
+				var message = "全ての問題を出題しました。準備モードに戻りますか？";
+				if (MessageBox.Show(message, "セット終了", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+				{
+					SongPlayer.Close();
+					_currentQuestion = null;
+					CurrentMode = Mode.Ready;
+					// 問題をクリアする仕様にしてみる。
+					listBoxQuestions.Items.Clear();
+				}
+			}
+		}
+
+		private void NextQuestion_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = CurrentMode == Mode.Game && CurrentGameMode == GameMode.Talking;
+		}
+
+		// (0.0.4)
+		protected void StandbyQuestion(IntroQuestion question)
+		{
+			listBoxQuestions.SelectedItem = question;
+
+			// 現在の曲を設定する。
+			SongPlayer.Open(question.Song.FileName);
+			// シークはStartQuestionコマンドで行う。
+			_currentQuestion = question;
+			CurrentGameMode = GameMode.Standby;
+			
+		}
+		#endregion
+
+		#region GameMode列挙体
+		public enum GameMode
+		{
+			/// <summary>
+			/// 出題準備が完了した状態です。
+			/// </summary>
+			Standby,
+			/// <summary>
+			/// 出題中の状態です。
+			/// </summary>
+			Playing,
+			/// <summary>
+			/// 解答権を得て考え中の状態です。
+			/// </summary>
+			Thinking,
+			/// <summary>
+			/// 正誤判定を終了して、正解のフォローなどをしている状態です。
+			/// </summary>
+			Talking
+		}
+		#endregion
+
+		// (0.0.4)
+		#region *[dependency]CurrentGameModeプロパティ
+
+		/// <summary>
+		/// 現在のモードを取得／設定します．
+		/// </summary>
+		GameMode CurrentGameMode
+		{
+			get
+			{ return (GameMode)GetValue(CurrentGameModeProperty); }
+			set
+			{ SetValue(CurrentGameModeProperty, value); }
+		}
+		public static readonly DependencyProperty CurrentGameModeProperty
+			= DependencyProperty.Register(
+				"CurrentGameMode", typeof(GameMode), typeof(MainWindow),
+				new PropertyMetadata(GameMode.Talking));
+
+		// 依存関係プロパティはデータバインディングとの相性がよくて便利なんだけど，
+		// プロパティの変更時にもうちょっと複雑なことをしようとすると，
+		// コールバックがstaticなので使いにくいんだよなぁ．
+		// こうやってinternalメソッドを駆使するのは普通の使い方なのかしら？
+
+		/// <summary>
+		/// CurrentModeに応じてレイアウトを変更します．
+		/// CurrentModeプロパティの変更時に呼び出されることを想定しています．
+		/// </summary>
+/*		internal void ChangeGameLayout()
+		{
+			switch (CurrentGameMode)
+			{
+			}
+			//this.UpdateLayout();	// これが必要らしい．
+		}
+		*/
+		#endregion
+
+
+
+		#region 問題再生関連
+
+		// (0.0.4)
+		#region *SongPlayerプロパティ
+		public HyperMutus.SongPlayer SongPlayer
+		{
+			get
+			{
+				return _songPlayer;
+			}
+		}
+		HyperMutus.SongPlayer _songPlayer = new HyperMutus.SongPlayer();
+		#endregion
+
+		// (0.0.4)
+		#region *曲ファイルオープン時(SongPlayer_MediaOpened)
+		void SongPlayer_MediaOpened(object sender, EventArgs e)
+		{
+			if (_songPlayer.Duration.HasValue)
+			{
+				this.labelDuration.Content = _songPlayer.Duration.Value;
+				this.sliderSeekSong.Maximum = _songPlayer.Duration.Value.TotalSeconds;
+			}
+		}
+		#endregion
+
+
+		IntroQuestion _currentQuestion = null;
+
+		// (0.0.4)
+		#region StartQuestion
+		private void StartQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			SongPlayer.CurrentPosition = _currentQuestion.PlayPos;
+			SongPlayer.Play();
+			CurrentGameMode = GameMode.Playing;
+		}
+
+		private void StartQuestion_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = CurrentGameMode == GameMode.Standby;
+		}
+		#endregion
+
+		// (0.0.4)
+		#region StopQuestion
+		private void StopQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			SongPlayer.Pause();
+			CurrentGameMode = GameMode.Thinking;
+		}
+
+		private void StopQuestion_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			// とりあえず。
+			e.CanExecute = CurrentMode == Mode.Game && CurrentGameMode == GameMode.Playing;
+		}
+		#endregion
+
+		// (0.0.4)
+		#region EndQuestion
+		private void EndQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			SongPlayer.Pause();
+			CurrentGameMode = GameMode.Talking;
+		}
+		#endregion
+
+		// (0.0.4)
+		private void SwitchPlayPause_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			if (CurrentGameMode == GameMode.Thinking)
+			{
+				CurrentGameMode = GameMode.Talking;
+			}
+			SongPlayer.TogglePlayPause();
+		}
+
+		// (0.0.4)
+		private void SeekSabi_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			SongPlayer.CurrentPosition = _currentQuestion.Song.SabiPos;
+		}
+
+		// (0.0.4)
+		private void SongPlayer_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			e.CanExecute = CurrentMode == Mode.Game &&
+				(CurrentGameMode == GameMode.Thinking || CurrentGameMode == GameMode.Talking) &&
+				SongPlayer.CurrentState != HyperMutus.SongPlayer.State.Inactive;
+		}
+
+
+		#endregion
+
+
 
 	}
 }

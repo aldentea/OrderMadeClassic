@@ -3,58 +3,84 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+				xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:local="clr-namespace:GrandMutus.OrderMadeClassic"
 				xmlns:wpf="clr-namespace:Aldentea.Wpf.Application;assembly=AldenteaWpfApplication"
+				xmlns:util="clr-namespace:Aldentea.Wpf.Utility;assembly=AldenteaWpfUtility"
+				xmlns:hypermutus="clr-namespace:HyperMutus;assembly=MutusBase"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="619">
-  <Window.Resources>
-    <local:ModeIsGameConverter x:Key="modeIsGameConverter" />
+        Title="MainWindow" Height="600" Width="619" FontSize="18">
+	<Window.Resources>
+		<local:ModeIsGameConverter x:Key="modeIsGameConverter" />
 		<local:CategoryQuestionConverter x:Key="categoryQuestionConverter" />
-  </Window.Resources>
-  <Window.CommandBindings>
+		<util:CaptionConverter x:Key="captionConverter" ApplicationName="SweetMutus" />
+		<util:TimeSpanDoubleConverter x:Key="timeSpanDoubleConverter" />
+		<!--		<local:DurationConverter x:Key="durationConverter" />-->
+	</Window.Resources>
+	<Window.CommandBindings>
 		<CommandBinding Command="{x:Static local:Commands.EnterCategoryCommand}"
 										Executed="EnterCategory_Executed"
 										CanExecute="EnterCategory_CanExecute" />
-    <CommandBinding Command="{x:Static local:Commands.ShuffleCommand}"
+		<CommandBinding Command="{x:Static local:Commands.ShuffleCommand}"
 										Executed="Shuffle_Executed"
 										CanExecute="Shuffle_CanExecute" />
-  </Window.CommandBindings>
-  <Grid>
-    <Grid.RowDefinitions>
-      <RowDefinition Height="Auto" />
-      <RowDefinition Height="*" />
-      <RowDefinition Name="RowQuestionPlayer" Height="200" />
-      <RowDefinition Height="Auto" />
-    </Grid.RowDefinitions>
+		<CommandBinding Command="{x:Static local:Commands.NextQuestionCommand}"
+										Executed="NextQuestion_Executed"
+										CanExecute="NextQuestion_CanExecute" />
+		<CommandBinding Command="{x:Static local:Commands.StartQuestionCommand}"
+										Executed="StartQuestion_Executed"
+										CanExecute="StartQuestion_CanExecute" />
+		<CommandBinding Command="{x:Static local:Commands.StopQuestionCommand}"
+										Executed="StopQuestion_Executed"
+										CanExecute="StopQuestion_CanExecute" />
+		<CommandBinding Command="{x:Static local:Commands.EndQuestionCommand}"
+										Executed="EndQuestion_Executed"
+										CanExecute="StopQuestion_CanExecute" />
+		<CommandBinding
+										Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}"
+										Executed="SwitchPlayPause_Executed"
+										CanExecute="SongPlayer_CanExecute" />
+		<CommandBinding
+										Command="{x:Static hypermutus:Commands.SeekSabiCommand}"
+										Executed="SeekSabi_Executed"
+										CanExecute="SongPlayer_CanExecute" />
+	</Window.CommandBindings>
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Name="RowQuestionPlayer" Height="200" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
 
 
-    <Menu Grid.Row="0">
-      <MenuItem Header="ファイル(_F)">
+		<Menu FontSize="18" Grid.Row="0">
+			<MenuItem Header="ファイル(_F)">
 				<MenuItem Header="開く(_O)" Command="Open" />
 				<MenuItem Header="履歴から開く(_H)" Name="MenuItemFileHistoryParent" />
 				<MenuItem Header="終了(_X)" Command="Close" />
-      </MenuItem>
-      <MenuItem Header="モード(_M)">
-        <MenuItem Header="出題中" IsCheckable="True"
+			</MenuItem>
+			<MenuItem Header="モード(_M)">
+				<MenuItem Header="出題中" IsCheckable="True"
 									IsChecked="{Binding RelativeSource={RelativeSource AncestorType=Window},
 														Path=CurrentMode, Converter={StaticResource modeIsGameConverter}}" />
-      </MenuItem>
-    </Menu>
+			</MenuItem>
+		</Menu>
 
-    <Grid Grid.Row="1">
-      <Grid.RowDefinitions>
+		<Grid Grid.Row="1">
+			<Grid.RowDefinitions>
 				<RowDefinition Height="*" />
-        <RowDefinition Height="Auto" />
-      </Grid.RowDefinitions>
-      <Grid.ColumnDefinitions>
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			<Grid.ColumnDefinitions>
 				<ColumnDefinition Name="ColumnCategories" Width="*" />
-        <ColumnDefinition Width="Auto" />
-        <ColumnDefinition Width="2*" />
-      </Grid.ColumnDefinitions>
-		  <ListBox x:Name="listBoxCategories" Margin="10,10,10,25"
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="2*" />
+			</Grid.ColumnDefinitions>
+			<ListBox x:Name="listBoxCategories" Margin="10,10,10,25"
 							 Grid.Column="0" Grid.Row="0" Grid.RowSpan="2"
 							 ItemsSource="{Binding Path=Questions.Categories}" />
-      <Button x:Name="buttonEnter" Content="選択" Margin="0,10,0,25"
+			<Button x:Name="buttonEnter" Content="選択" Margin="0,10,0,25"
 							Grid.Column="1"  Grid.Row="0" Grid.RowSpan="2" MinWidth="50"
 							Command="{x:Static local:Commands.EnterCategoryCommand}"
 							CommandParameter="{Binding ElementName=listBoxCategories, Path=SelectedItem}"/>
@@ -66,23 +92,67 @@
 					</DataTemplate>
 				</ListBox.ItemTemplate>
 			</ListBox>
-      <Grid Grid.Column="2" Grid.Row="1">
-        <Grid.ColumnDefinitions>
+			<Grid Grid.Column="2" Grid.Row="1">
+				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
-          <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 				<Button Content="Shuffle" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,0,25"
 								Grid.Column="0" MinHeight="60"/>
 			</Grid>
 		</Grid>
 
 		<Grid Grid.Row="2">
-			<Button Content="START" Width="120" Height="50"
-							HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,10,10" />
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition />
+			</Grid.ColumnDefinitions>
+			<Grid.Resources>
+				<Style TargetType="Button">
+					<Setter Property="Width" Value="120" />
+					<Setter Property="Height" Value="40" />
+					<Setter Property="HorizontalAlignment" Value="Center" />
+				</Style>
+			</Grid.Resources>
+			<StackPanel Grid.Column="0" Orientation="Vertical">
+				<Button Content="NEXT" Grid.Column="0" Margin="10,5"
+								Command="{x:Static local:Commands.NextQuestionCommand}"/>
+				<Button Content="START" Grid.Column="0" Margin="10,5"
+								Command="{x:Static local:Commands.StartQuestionCommand}"/>
+				<Button Content="STOP"  Grid.Column="0" Margin="10,5"
+								Command="{x:Static local:Commands.StopQuestionCommand}"/>
+				<Button Content="END" Grid.Column="0" Margin="10,5"
+								Command="{x:Static local:Commands.EndQuestionCommand}"/>
+			</StackPanel>
+			<Slider Grid.Column="1" Height="36" Margin="10,88,10,76" HorizontalAlignment="Stretch"
+								TickFrequency="60" Maximum="100" Minimum="0" Name="sliderSeekSong" TickPlacement="BottomRight"
+								LargeChange="30" SmallChange="5"
+								Value="{Binding RelativeSource={RelativeSource AncestorType=Window},
+												Path=SongPlayer.CurrentPosition, Mode=TwoWay, Converter={StaticResource timeSpanDoubleConverter}}" />
+			<Label Name="labelCurrentPosition"  Grid.Column="1"
+								Content="{Binding RelativeSource={RelativeSource AncestorType=Window},
+													Path=SongPlayer.CurrentPosition, Mode=OneWay}" ContentStringFormat="m\:ss"
+								HorizontalAlignment="Right" HorizontalContentAlignment="Right"
+								Margin="0,58,99,0" VerticalAlignment="Top"/>
+			<Label Name="labelDuration" HorizontalContentAlignment="Right"
+								HorizontalAlignment="Right" ContentStringFormat="m\:ss" Content="{x:Static sys:TimeSpan.Zero}"
+								Margin="0,58,10,0" VerticalAlignment="Top" Grid.Column="1"/>
+			<Button Content="PLAY" Grid.Column="1"
+				HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10,10,0,0"
+							Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}"/>
+			<Button Content="SABI" Grid.Column="1"
+				HorizontalAlignment="Left" VerticalAlignment="Top" Margin="151,10,0,0"
+							Command="{x:Static hypermutus:Commands.SeekSabiCommand}"/>
+
+
 		</Grid>
 
-    <StatusBar Grid.Row="3" Height="27">
-
-    </StatusBar>
-  </Grid>
+		<StatusBar Grid.Row="3" Height="40">
+			<Label Content="やっほー" />
+			<Slider Width="300" HorizontalAlignment="Right" Name="sliderVolume"
+							ToolTip="音量"
+							Value="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}, Path=SongPlayer.Volume}"
+							Maximum="1" Minimum="0" SmallChange="0.01" LargeChange="0.1" AutoToolTipPrecision="2" IsSelectionRangeEnabled="True" AutoToolTipPlacement="BottomRight"/>
+		</StatusBar>
+	</Grid>
 </wpf:BasicWindow>
