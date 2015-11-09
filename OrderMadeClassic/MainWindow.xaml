@@ -25,6 +25,9 @@
 		<CommandBinding Command="{x:Static local:Commands.ShuffleCommand}"
 										Executed="Shuffle_Executed"
 										CanExecute="Shuffle_CanExecute" />
+		<CommandBinding Command="{x:Static local:Commands.ClearListCommand}"
+										Executed="ClearList_Executed"
+										CanExecute="Shuffle_CanExecute" />
 		<CommandBinding Command="{x:Static local:Commands.NextQuestionCommand}"
 										Executed="NextQuestion_Executed"
 										CanExecute="NextQuestion_CanExecute" />
@@ -101,8 +104,10 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button Content="Shuffle" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,0,25"
+				<Button Content="Shuffle" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,10,25"
 								Grid.Column="0" MinHeight="60"/>
+				<Button Content="Clear" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,10,25"
+								Grid.Column="1" MinHeight="60"/>
 			</Grid>
 		</Grid>
 
