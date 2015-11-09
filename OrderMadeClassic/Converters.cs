@@ -39,6 +39,8 @@ namespace GrandMutus.OrderMadeClassic
 	}
 	#endregion
 
+	// (0.0.7)nullに対応。
+	// (0.0.4)
 	#region CategoryQuestionConverterクラス
 	public class CategoryQuestionConverter : IValueConverter
 	{
@@ -49,6 +51,10 @@ namespace GrandMutus.OrderMadeClassic
 			{
 				var question = (GrandMutus.Data.IntroQuestion)value;
 				return string.Format("[{0}] {1} / {2}", question.Category, question.Song.Title, question.Song.Artist);
+			}
+			else if (value == null)
+			{
+				return string.Empty;
 			}
 			else
 			{

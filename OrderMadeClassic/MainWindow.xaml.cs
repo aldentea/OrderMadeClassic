@@ -243,7 +243,7 @@ namespace GrandMutus.OrderMadeClassic
 				if (MessageBox.Show(message, "セット終了", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
 				{
 					SongPlayer.Close();
-					_currentQuestion = null;
+					CurrentQuestion = null;
 					CurrentMode = Mode.Ready;
 					// 問題をクリアする仕様にしてみる。
 					listBoxQuestions.Items.Clear();
@@ -264,7 +264,7 @@ namespace GrandMutus.OrderMadeClassic
 			// 現在の曲を設定する。
 			SongPlayer.Open(question.Song.FileName);
 			// シークはStartQuestionコマンドで行う。
-			_currentQuestion = question;
+			CurrentQuestion = question;
 			CurrentGameMode = GameMode.Standby;
 			
 		}
@@ -357,14 +357,26 @@ namespace GrandMutus.OrderMadeClassic
 		}
 		#endregion
 
-
-		IntroQuestion _currentQuestion = null;
+		// (0.0.7)フィールドからプロパティに昇格(？)
+		#region *[dependency]CurrentQuestionプロパティ
+		IntroQuestion CurrentQuestion
+		{
+			get
+			{ return (IntroQuestion)GetValue(CurrentQuestionProperty); }
+			set
+			{ SetValue(CurrentQuestionProperty, value); }
+		}
+		public static readonly DependencyProperty CurrentQuestionProperty
+			= DependencyProperty.Register(
+				"CurrentQuestion", typeof(IntroQuestion), typeof(MainWindow),
+				new PropertyMetadata(null));
+		#endregion
 
 		// (0.0.4)
 		#region StartQuestion
 		private void StartQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			SongPlayer.CurrentPosition = _currentQuestion.PlayPos;
+			SongPlayer.CurrentPosition = CurrentQuestion.PlayPos;
 			SongPlayer.Play();
 			CurrentGameMode = GameMode.Playing;
 		}
@@ -412,7 +424,7 @@ namespace GrandMutus.OrderMadeClassic
 		// (0.0.4)
 		private void SeekSabi_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
-			SongPlayer.CurrentPosition = _currentQuestion.Song.SabiPos;
+			SongPlayer.CurrentPosition = CurrentQuestion.Song.SabiPos;
 		}
 
 		// (0.0.4)

@@ -106,7 +106,7 @@
 				</Grid.ColumnDefinitions>
 				<Button Content="Shuffle" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,10,25"
 								Grid.Column="0" MinHeight="60"/>
-				<Button Content="Clear" Command="{x:Static local:Commands.ShuffleCommand}" Margin="10,0,10,25"
+				<Button Content="Clear" Command="{x:Static local:Commands.ClearListCommand}" Margin="10,0,10,25"
 								Grid.Column="1" MinHeight="60"/>
 			</Grid>
 		</Grid>
@@ -157,7 +157,10 @@
 		</Grid>
 
 		<StatusBar Grid.Row="3" Height="40">
-			<Label Content="やっほー" />
+			<Label Content="出題曲→" />
+			<TextBlock Name="labelAnswer"
+				Text="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=CurrentQuestion,
+				Converter={StaticResource categoryQuestionConverter}}" /> 
 			<Slider Width="300" HorizontalAlignment="Right" Name="sliderVolume"
 							ToolTip="音量"
 							Value="{Binding RelativeSource={RelativeSource AncestorType=local:MainWindow}, Path=SongPlayer.Volume}"
