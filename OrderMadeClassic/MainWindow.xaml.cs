@@ -209,6 +209,15 @@ namespace GrandMutus.OrderMadeClassic
 		}
 		#endregion
 
+		// (0.0.6)
+		#region ClearList
+
+		private void ClearList_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			listBoxQuestions.Items.Clear();
+		}
+
+		#endregion
 
 		/// <summary>
 		/// 出題した問題のカウントです。
