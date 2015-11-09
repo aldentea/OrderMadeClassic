@@ -25,5 +25,8 @@ namespace GrandMutus.OrderMadeClassic
 		// (0.0.4)どこかにあったはずだが、とりあえずここで実装しておく。
 		public static RoutedCommand EndQuestionCommand = new RoutedCommand();
 
+		// (0.0.6)もう少し一般的なところに移動するつもり。
+		public static RoutedCommand ClearListCommand = new RoutedCommand();
+
 	}
 }
