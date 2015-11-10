@@ -209,12 +209,19 @@ namespace GrandMutus.OrderMadeClassic
 		}
 		#endregion
 
+		// (0.0.8)_questionCountのリセットを追加。
 		// (0.0.6)
 		#region ClearList
 
 		private void ClearList_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
+			ClearQuestions();
+		}
+
+		void ClearQuestions()
+		{
 			listBoxQuestions.Items.Clear();
+			_questionCount = 0;
 		}
 
 		#endregion
@@ -245,8 +252,9 @@ namespace GrandMutus.OrderMadeClassic
 					SongPlayer.Close();
 					CurrentQuestion = null;
 					CurrentMode = Mode.Ready;
-					// 問題をクリアする仕様にしてみる。
-					listBoxQuestions.Items.Clear();
+					// (0.0.8)_questionsCountも0になる。
+					// 問題をクリアする。
+					ClearQuestions();
 				}
 			}
 		}
