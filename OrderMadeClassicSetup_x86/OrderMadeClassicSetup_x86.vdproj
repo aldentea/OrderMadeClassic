@@ -665,15 +665,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:OrderMadeClassic"
-        "ProductCode" = "8:{A8B5B8DE-08BB-4A8F-ABBF-018B9A7C7723}"
-        "PackageCode" = "8:{58B5B623-0EBD-448E-8602-A20B0830F1E6}"
+        "ProductCode" = "8:{CBEC5D4E-32EA-48D3-83B7-C1F2E2C60CC9}"
+        "PackageCode" = "8:{CE3999A0-CA86-4074-BB11-18FFEF1EA869}"
         "UpgradeCode" = "8:{F46D39AC-CD02-4E57-A9A3-6EF848ACFC3B}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:TRUE"
-        "ProductVersion" = "8:0.0.7"
+        "ProductVersion" = "8:0.0.8"
         "Manufacturer" = "8:HyperMutusProject"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1201,7 +1201,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_24EC718F3C4D422798913608C2D790E6"
             {
-            "SourcePath" = "8:..\\OrderMadeClassic\\obj\\x64\\Release\\OrderMadeClassic.exe"
+            "SourcePath" = "8:..\\OrderMadeClassic\\obj\\x86\\Release\\OrderMadeClassic.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F59E481B0D5741DD94F7017A09129811"
