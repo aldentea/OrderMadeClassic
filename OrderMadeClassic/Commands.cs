@@ -28,5 +28,8 @@ namespace GrandMutus.OrderMadeClassic
 		// (0.0.6)もう少し一般的なところに移動するつもり。
 		public static RoutedCommand ClearListCommand = new RoutedCommand();
 
+
+		public static RoutedCommand StartStopQuestionCommand = new RoutedCommand();
+
 	}
 }

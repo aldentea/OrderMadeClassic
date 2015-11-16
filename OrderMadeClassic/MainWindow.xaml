@@ -37,7 +37,10 @@
 		<CommandBinding Command="{x:Static local:Commands.StopQuestionCommand}"
 										Executed="StopQuestion_Executed"
 										CanExecute="StopQuestion_CanExecute" />
-		<CommandBinding Command="{x:Static local:Commands.EndQuestionCommand}"
+    <CommandBinding Command="{x:Static local:Commands.StartStopQuestionCommand}"
+										Executed="StartStopQuestion_Executed"
+										CanExecute="StartStopQuestion_CanExecute" />
+    <CommandBinding Command="{x:Static local:Commands.EndQuestionCommand}"
 										Executed="EndQuestion_Executed"
 										CanExecute="StopQuestion_CanExecute" />
 		<CommandBinding
@@ -52,11 +55,18 @@
 										Executed="Close_Executed"
 										CanExecute="Always_CanExecute" />
 	</Window.CommandBindings>
+  <Window.InputBindings>
+		<KeyBinding Key="F3" Command="{x:Static local:Commands.StartStopQuestionCommand}" />
+    <KeyBinding Key="F4" Command="{x:Static local:Commands.EndQuestionCommand}" />
+    <KeyBinding Key="F5" Command="{x:Static hypermutus:Commands.SwitchPlayPauseCommand}" />
+    <KeyBinding Key="F6" Command="{x:Static hypermutus:Commands.SeekSabiCommand}" />
+    <KeyBinding Key="F9" Command="{x:Static local:Commands.NextQuestionCommand}" />
+  </Window.InputBindings>
 	<Grid>
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*" />
-			<RowDefinition Name="RowQuestionPlayer" Height="0" />
+			<RowDefinition Name="RowQuestionPlayer" Height="200" />
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
@@ -134,10 +144,10 @@
 								Command="{x:Static local:Commands.EndQuestionCommand}"/>
 			</StackPanel>
 			<Slider Grid.Column="1" Height="36" Margin="10,88,10,76" HorizontalAlignment="Stretch"
-								TickFrequency="60" Maximum="100" Minimum="0" Name="sliderSeekSong" TickPlacement="BottomRight"
-								LargeChange="30" SmallChange="5"
-								Value="{Binding RelativeSource={RelativeSource AncestorType=Window},
-												Path=SongPlayer.CurrentPosition, Mode=TwoWay, Converter={StaticResource timeSpanDoubleConverter}}" />
+							TickFrequency="60" Maximum="100" Minimum="0" Name="sliderSeekSong" TickPlacement="BottomRight"
+							LargeChange="30" SmallChange="5"
+							Value="{Binding RelativeSource={RelativeSource AncestorType=Window},
+											Path=SongPlayer.CurrentPosition, Mode=TwoWay, Converter={StaticResource timeSpanDoubleConverter}}" />
 			<Label Name="labelCurrentPosition"  Grid.Column="1"
 								Content="{Binding RelativeSource={RelativeSource AncestorType=Window},
 													Path=SongPlayer.CurrentPosition, Mode=OneWay}" ContentStringFormat="m\:ss"

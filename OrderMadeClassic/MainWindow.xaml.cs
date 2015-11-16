@@ -24,6 +24,7 @@ namespace GrandMutus.OrderMadeClassic
 	public partial class MainWindow : BasicWindow
 	{
 
+		#region *MySettingsプロパティ
 		Properties.Settings MySettings
 		{
 			get
@@ -31,6 +32,7 @@ namespace GrandMutus.OrderMadeClassic
 				return Properties.Settings.Default;
 			}
 		}
+		#endregion
 
 		// (0.0.4)MediaOpenedイベントのハンドラを追加。
 		#region *コンストラクタ(MainWindow)
@@ -45,23 +47,29 @@ namespace GrandMutus.OrderMadeClassic
 		#endregion
 
 		// (0.0.5)
+		#region ウィンドウ初期化時(MainWindow_Initialized)
 		private void MainWindow_Initialized(object sender, EventArgs e)
 		{
 			// Initializedより
 			SongPlayer.Volume = MySettings.SongPlayerVolume;
 		}
+		#endregion
 
 		// (0.0.5)
+		#region ウィンドウクローズ時(MainWindow_Closed)
 		private void MainWindow_Closed(object sender, EventArgs e)
 		{
 			MySettings.SongPlayerVolume = SongPlayer.Volume;
 		}
+		#endregion
 
 		// (0.0.5)
+		#region Close
 		private void Close_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			this.Close();
 		}
+		#endregion
 
 		#region *MyDocumentプロパティ
 		public GrandMutus.Data.MutusDocument MyDocument
@@ -138,7 +146,6 @@ namespace GrandMutus.OrderMadeClassic
 		#endregion
 
 		#endregion
-
 
 		#region EnterCategory
 
@@ -410,6 +417,32 @@ namespace GrandMutus.OrderMadeClassic
 		}
 		#endregion
 
+		// InputBinding用に作ってみる．汎用化できるかも？
+		#region StartStopQuestion
+		private void StartStopQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
+		{
+			var target = sender as IInputElement;
+      if (Commands.StartQuestionCommand.CanExecute(e.Parameter, target))
+			{
+				Commands.StartQuestionCommand.Execute(e.Parameter, target);
+			}
+			else if (Commands.StopQuestionCommand.CanExecute(e.Parameter, target))
+			{
+				Commands.StopQuestionCommand.Execute(e.Parameter, target);
+			}
+		}
+
+		private void StartStopQuestion_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+		{
+			var target = sender as IInputElement;
+			//e.CanExecute = true;	//デバッグ用
+			// とりあえず。
+			e.CanExecute
+				= Commands.StartQuestionCommand.CanExecute(e.Parameter, target)
+					|| Commands.StopQuestionCommand.CanExecute(e.Parameter, target);
+		}
+		#endregion
+
 		// (0.0.4)
 		#region EndQuestion
 		private void EndQuestion_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -420,6 +453,7 @@ namespace GrandMutus.OrderMadeClassic
 		#endregion
 
 		// (0.0.4)
+		#region SwitchPlayPause / SeekSabi
 		private void SwitchPlayPause_Executed(object sender, ExecutedRoutedEventArgs e)
 		{
 			if (CurrentGameMode == GameMode.Thinking)
@@ -442,6 +476,7 @@ namespace GrandMutus.OrderMadeClassic
 				(CurrentGameMode == GameMode.Thinking || CurrentGameMode == GameMode.Talking) &&
 				SongPlayer.CurrentState != HyperMutus.SongPlayer.State.Inactive;
 		}
+		#endregion
 
 
 		#endregion
